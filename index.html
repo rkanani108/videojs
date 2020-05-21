@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	 <link rel="icon" href="favicon.png" type="image/png" sizes="64x64">
+	<title>Video Marker</title>
+	<!-- Mobile Specific Metas -->
+  	<meta name="viewport" content="width=device-width, initial-scale=1">
+    
+  	<!-- Bootstrap CSS -->
+  	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+  	<!-- Custom CSS -->
+  	<link rel="stylesheet" type="text/css" href="css/interaction.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+   
+	<!-- Video Js script-->
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/video.js/6.7.3/video-js.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/video.js/6.7.3/video.min.js"></script>
+</head>
+
+<body>
+
+	<div class="container">
+	<div class="row text-center">
+	
+	<div class="card col-md-6 col-sm-12 text-center border-right-0">
+	
+			<div class="row card-header">
+			
+				<h4>Video Marker</h4>
+				<div class=" col-5 link-wrapper">
+				    <div class="row m-1 d-md-inline-block d-none d-sm-block ">
+						<a target="_blank" href="https://chrome.google.com/webstore/detail/google-input-tools/mclkkofklkfljcocdinagocijmpgbhab/related" class="badge badge-info mr-1">Keyboard Tool </a>
+						<a target="_blank" href="https://chrome.google.com/webstore/detail/voice-in-voice-typing/pjnefijmagpdjfhhkpljicbbpicelgko" class="badge badge-info">Voice Tool</a>
+					</div>
+					
+					<div class="row m-1 d-block d-sm-none">
+						<a target="_blank" href="https://play.google.com/store/apps/details?id=com.google.android.apps.inputmethod.hindi&hl=en" class="badge badge-info">Indic Keyboard</a>
+					</div>
+				</div>
+			</div>
+			
+
+			<div class="card-body pt-3">
+			<div class="row pb-0">
+				<!-- <div class="col-md-6 row input-group col-sm-12">
+					
+					<input id="youtubeid" placeholder="Enter youtube id" type="file" accept="video/*" onchange="setLocalAudio()" class="form-control form-control-sm text-center" >
+					<div class="input-group-append">
+						<button class="btn btn-sm btn-info" type="button" onclick="setLocalAudio()">
+							<i class="fa fa-floppy-o"></i> Load</button>
+					</div>
+				</div> -->
+				
+				<div class="col-md-6 right col-sm-12">
+					<span class="badge badge-secondary" type="button" onclick="speed(0.80)">Slow 0.80 <i class="fa fa-arrow-down"></i> </span>
+					<span class="badge badge-secondary" type="button" onclick="speed(1)">Normal 1.0 </span>
+					<span class="badge badge-secondary" type="button" onclick="speed(1.25)">Fast 1.25 <i class="fa fa-arrow-up"></i> </span>
+		
+				</div>
+			</div>
+				
+			<div class="row input-group mt-3">
+			  <div class="custom-file w-100">
+				<input type="file" class="custom-file-input" onchange="setLocalAudio()">
+				<label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+			  </div>
+			  <div class="small text-left"><b>File Name:</b>
+			  <span id="fname"> file name displayed here.</span>
+		    </div>
+			</div>
+			
+				
+			<div class="row py-3 video-container ">
+				<!--Video Player-->
+				<!-- <audio id="audioPlayer" class="w-100" controls style="display: none;">
+					<source src="" type="audio/mpeg">
+					Your browser does not support this type of audio. 
+				</audio> -->
+				
+				<video
+					id="player"
+					class="video-js"
+					controls
+					width="640"
+					height="264"
+					
+					>
+					
+				</video>
+			</div>
+			
+			<div class="row">
+			    <div class="col text-left">
+					<button class="btn btn-sm btn-secondary" type="button" onclick="playAudio()">Play &nbsp;<i id="play" class="fa fa-play"></i> </button>
+					<button class="btn btn-sm btn-info d-none" id="playSlot" type="button" onclick="playStartEnd()"><i class="fa fa-play-circle fa-1x"></i> Note</button>
+				</div>
+			
+				<div class="col-5 text-right input-group number-spinner w-25">
+					<span class="input-group-btn">
+						<button class="btn btn-sm  btn-secondary" onclick="backward()"><i class="fa fa-backward"></i></button>
+					</span>
+					<input id="forwardValue" type="number" class="form-control form-control-sm text-center" value="5" min="1" max="10">
+					<span class="input-group-btn">
+						<button class="btn btn-sm btn-secondary" onclick="forward()"><i class="fa fa-forward"></i></button>
+					</span>
+				</div>
+			</div>
+			
+			<div class="d-flex mt-3"><span class="badge badge-light" style="font-size: 16px;" id="currentTime">00:00:00</span></div>     <!--  / <span style="font-size: 16px;"  class="badge badge-light" id="durationTime">00:00:00</span> -->
+		
+			<hr>
+			<!-- from to click-->
+			
+			<div class="input-group my-2 mt-5">
+			 
+               
+                <div class="input-group-prepend">
+                    <button  id="btnStartTime" class="btn btn-secondary" style="padding: 6px;" type="button" onclick="onFromClick()">Start</button>
+                </div>
+				<input id="fromTime" type="text" onclick="fromGoToTime()" class="form-control"  readonly>
+				
+				
+						 <div class="input-group-prepend">
+						<button id="btnEndTime" class="btn btn-secondary"  type="button" onclick="onToClick()">End</button>
+					</div>
+					<input id="toTime"  type="text" onclick="toGoToTime()" class="form-control" readonly>
+				
+
+                <input id="fromTimeSecond" type="hidden" class="form-control" >
+                <input id="toTimeSecond" type="hidden" class="form-control">
+				<input id="uniqueId" type="hidden" class="form-control">
+
+
+            </div>
+			 <!-- [VOICE CONTROL BUTTON] -->
+   
+  
+		   <!-- <form id="search-form" onsubmit="return false">
+   
+    SPEECH RECOGNITION -->
+		  <!-- <div id="search-speech" style="display:none" class="text-right"> -->
+		   
+			<!-- <input type="button" disabled id="search-on" value="Speak" onclick="speech.start()"/> -->
+			<!-- <input type="button" disabled id="search-off" value="Stop" onclick="speech.stop()"/> -->
+		  <!-- </div> 
+		</form>-->
+            <div class="form-group text-left">
+
+                <label>Description:</label>
+                <textarea class="form-control" rows="3" type="" id="description"></textarea>
+				
+                
+				<div class="my-3 d-md-inline-flex float-right">
+					<button class="btn btn-info form-control" type="button" onclick="saveNote()">
+						<i class="fa fa-floppy-o"></i> Save</button>
+
+					
+				</div>
+				<div class="my-3 d-md-inline-flex float-left">
+				<button class="btn btn-warning form-control" type="button" onclick="clearValue()">
+						<i class="fa fa-floppy-o"></i> Clear</button>
+				</div>
+
+            </div>
+			
+
+		  </div>
+		    <div class="card-footer row text-muted small">
+		   
+               <span class="font-weight-bold">Note:</span><span class="text-muted"> &nbsp;Chrome browser is mandatory for this app.</span>
+           
+		  </div>
+	</div>
+	<div class="card col-md-6 col-sm-12">
+		  <div class="card-header row d-inline-flex">
+			
+				<h4>Notes</h4>
+			
+			<div class="text-right col">
+				<button id="export" class="btn btn-success py-1 exportToExcel" type="button"><i class="fa fa-download" ></i> Export</button>
+			</div>
+		  </div>
+		  <div class="card-body">
+			
+			    <div class="row">
+				    <div class="table table-striped table-responsive table-bordered">
+						<table class="table table2excel" data-tableName="Test Table 2" style="width: 100%" id="AudioNoteBookTable">
+							<thead class="table-secondary">
+								<tr>
+								   
+									<td>From</td>
+									<td>To</td>
+									<td>Description</td>
+									<td data-exclude="true">Edit</td>
+									<td data-exclude="true">Delete</td>
+
+								</tr>
+							</thead>
+							<tbody>
+		  
+							</tbody>
+
+						</table>
+					</div>
+            
+           
+        </div>
+			
+		  </div>
+		  
+		   <div class="card-footer row text-muted p-1 text-right d-inline-block">
+		   
+                <button class="btn btn-danger mr-4 py-1" type="button" onclick="clearNotes()"><i class="fa fa-trash"></i></button>
+           
+		  </div>
+
+	
+	</div>
+	</div>
+	
+	  
+		
+		
+
+
+    </div>
+
+
+	<!-- Bootstrap -->
+	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
+
+	<script src="https://cdn.jsdelivr.net/gh/linways/table-to-excel@v1.0.4/dist/tableToExcel.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+	
+
+	<!-- Custom JS -->
+	<script src="js/interaction.js"></script>
+
+</body>
+
+</html>
